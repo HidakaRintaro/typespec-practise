@@ -1,0 +1,709 @@
+openapi: 3.0.0
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  version: 1.0.11
+  description: |2-
+      This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+      Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+      You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+      That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+      _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
+
+      Some useful links:
+      - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+      - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+tags:
+  - name: pet
+  - name: store
+  - name: user
+paths:
+  /pets:
+    put:
+      tags:
+        - pet
+      operationId: Pets_update
+      summary: Update an existing pet
+      description: Update an existing pet by Id
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+        '405':
+          description: Client Error
+      requestBody:
+        description: Update an existent pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pet'
+    post:
+      tags:
+        - pet
+      operationId: Pets_create
+      summary: Add a new pet to the store
+      description: Add a new pet to the store
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '405':
+          description: Client Error
+      requestBody:
+        description: Create a new pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pet'
+  /pets/findByStatus:
+    get:
+      tags:
+        - pet
+      operationId: FindByStatus_list
+      summary: Finds Pets by status
+      description: Multiple status values can be provided with comma separated strings
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Status values that need to be considered for filter
+          schema:
+            type: string
+            enum:
+              - available
+              - pending
+              - sold
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+                x-typespec-name: Pet[]
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+                x-typespec-name: Pet[]
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+  /pets/findByTags:
+    get:
+      tags:
+        - pet
+      operationId: FindByTags_list
+      summary: Finds Pets by tags
+      description: >-
+        Multiple tags can be provided with comma separated strings. Use tag1,
+        tag2, tag3 for testing.
+      parameters:
+        - name: tags
+          in: query
+          style: form
+          explode: true
+          required: false
+          description: Tags to filter by
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+                x-typespec-name: Pet[]
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+                x-typespec-name: Pet[]
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+  /pets/{petId}:
+    get:
+      tags:
+        - pet
+      operationId: Details_read
+      summary: Find pet by ID
+      description: Returns a single pet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: ID of pet to return
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+    post:
+      tags:
+        - pet
+      operationId: Details_create
+      summary: Updates a pet in the store with form data
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: ID of pet that needs to be updated
+          schema:
+            type: integer
+            format: int64
+        - name: name
+          in: query
+          required: false
+          description: Name of pet that needs to be updated
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Status of pet that needs to be updated
+          schema:
+            type: string
+      responses:
+        '405':
+          description: Client Error
+    delete:
+      tags:
+        - pet
+      operationId: Details_delete
+      summary: Deletes a pet
+      description: delete a pet
+      parameters:
+        - name: api_key
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: petId
+          in: path
+          required: true
+          description: Pet id to delete
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+  /pets/{petId}/uploadImage:
+    post:
+      tags:
+        - pet
+      operationId: Details_uploadImage
+      summary: uploads an image
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: ID of pet to update
+          schema:
+            type: integer
+            format: int64
+        - name: additionalMetadata
+          in: query
+          required: false
+          description: Additional Metadata
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+  /store/inventory:
+    get:
+      tags:
+        - store
+      operationId: Store_read
+      summary: Returns pet inventories by status
+      description: Returns a map of status codes to quantities
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+                x-typespec-name: Record<int32>
+  /store/order:
+    post:
+      tags:
+        - store
+      operationId: StoreOrder_create
+      summary: Place an order for a pet
+      description: Place a new order in the store
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '405':
+          description: Client Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+  /store/order/{orderId}:
+    get:
+      tags:
+        - store
+      operationId: OrderDetails_read
+      summary: Find purchase order by ID
+      description: >-
+        For valid response try integer IDs with value <= 5 or > 10. Other values
+        will generate exceptions.
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: IDof order that needs to be fetched
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+    delete:
+      tags:
+        - store
+      operationId: OrderDetails_delete
+      summary: Delete purchase order by ID
+      description: >-
+        For valid response try integer IDs with value < 1000. Anything above
+        1000 or nonintegers will generate API errors
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          description: ID of the order that needs to bedeleted
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+  /user:
+    post:
+      tags:
+        - user
+      operationId: Users_create
+      summary: Create user
+      description: This can only be done by the logged in user.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+  /user/createWithList:
+    post:
+      tags:
+        - user
+      operationId: Users_createWithList
+      summary: Creates list of users with given input array
+      description: Creates list of users with given input array
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+              x-typespec-name: User[]
+  /user/login:
+    get:
+      tags:
+        - user
+      operationId: Users_login
+      summary: Logs user into the system
+      parameters:
+        - name: username
+          in: query
+          required: false
+          description: The user name for login
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: false
+          description: The password for login in clear text
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          headers:
+            x-rate-limit:
+              required: true
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            x-expires-after:
+              required: true
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+  /user/logout:
+    get:
+      tags:
+        - user
+      operationId: Users_logout
+      summary: Logs out current logged in user session
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+  /user/{username}:
+    get:
+      tags:
+        - user
+      operationId: FindByName_read
+      summary: Get user by user name
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: The name that needs to be fetched. Use user1 for testing.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+    put:
+      tags:
+        - user
+      operationId: FindByName_update
+      summary: Update user
+      description: This can only be done by the logged in user.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: name that need to be deleted
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - user
+      operationId: FindByName_delete
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: The name that needs to be deleted
+          schema:
+            type: string
+      responses:
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '404':
+          description: The server cannot find the requested resource.
+security:
+  - OAuth2Auth:
+      - write:pets
+      - read:pets
+  - ApiKeyAuth: []
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        address:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+          x-typespec-name: Address[]
+      required:
+        - username
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        petId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        shipDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - placed
+            - approved
+            - delivered
+          x-typespec-name: placed | approved | delivered
+          description: Order Status
+        complete:
+          type: boolean
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        photoUrls:
+          type: array
+          items:
+            type: string
+          x-typespec-name: string[]
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          x-typespec-name: Tag[]
+        status:
+          type: string
+          enum:
+            - available
+            - pending
+            - sold
+          x-typespec-name: available | pending | sold
+          description: pet status in the store
+      required:
+        - name
+        - photoUrls
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        userStatus:
+          type: integer
+          format: int32
+          description: User Status
+  securitySchemes:
+    OAuth2Auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: ''
+            read:pets: ''
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+    description: ''
+    variables: {}
