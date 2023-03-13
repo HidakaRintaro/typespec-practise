@@ -18,7 +18,7 @@ tags:
   - name: store
   - name: user
 paths:
-  /pets:
+  /pet:
     put:
       tags:
         - pet
@@ -85,7 +85,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Pet'
-  /pets/findByStatus:
+  /pet/findByStatus:
     get:
       tags:
         - pet
@@ -121,7 +121,7 @@ paths:
                 x-typespec-name: Pet[]
         '400':
           description: The server could not understand the request due to invalid syntax.
-  /pets/findByTags:
+  /pet/findByTags:
     get:
       tags:
         - pet
@@ -159,7 +159,7 @@ paths:
                 x-typespec-name: Pet[]
         '400':
           description: The server could not understand the request due to invalid syntax.
-  /pets/{petId}:
+  /pet/{petId}:
     get:
       tags:
         - pet
@@ -238,7 +238,7 @@ paths:
       responses:
         '400':
           description: The server could not understand the request due to invalid syntax.
-  /pets/{petId}/uploadImage:
+  /pet/{petId}/uploadImage:
     post:
       tags:
         - pet
