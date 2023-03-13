@@ -34,7 +34,7 @@ using TypeSpec.Http;
 namespace TypeSpecSample;
 namespace Auth {
   @tag("pet")
-  @route("/pets")
+  @route("/pet")
   namespace PetAPI {
     interface Pets {
       @summary("Update an existing pet")
